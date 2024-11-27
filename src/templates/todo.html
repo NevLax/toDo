@@ -1,0 +1,12 @@
+<!doctype html>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+<div class="wrapper">
+	<h1>Todo List</h1>
+	{% if td_dict %}
+	<ul>
+		{% for key, value in td_dict.items() %}
+		<li><a href="{{ url_for('get_todo', id=key)}}">{{ value['title'] }}</a></li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+</div>
