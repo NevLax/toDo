@@ -23,7 +23,7 @@ def hello():
     return 'Hello'
 
 @app.route('/todo/', methods=['GET', 'POST'])
-def todo_new():
+def todo():
     if request.method == 'GET': #get all todo
         return render_template('todo.html', td_dict=todo_dict)
     else:                       #post for add new todo
@@ -32,4 +32,4 @@ def todo_new():
 
 @app.route('/todo/<uuid:id>/')
 def get_todo(id):
-    return 'sim'
+    return render_template('todo-item.html', item=todo_dict[str(id)])
