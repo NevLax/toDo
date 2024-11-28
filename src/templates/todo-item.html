@@ -3,9 +3,9 @@
 <div class="wrapper">
 	{% if item %}
 	<h1>{{ item['title'] }}</h1>
-	<p>{{ item['description'] }}</p>
+	<p>{{ item['description'] |safe }}</p>
 	{% else %}
 	<h1>Not found ToDo</h1>
 	{% endif %}
-	<h3><a href="{{ url_for('todo')}}">Back</a></h3>
+	<h3><a href="{{ url_for('todo') }}">Back</a></h3>
 </div>
