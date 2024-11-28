@@ -47,6 +47,11 @@ def get_todo(id):
     return render_template('todo-item.html', item=todo_dict[str(id)])
 
 
+@app.route('/todo/<uuid:id>/del', methods=['POST'])
+def delete_todo(id):
+    del todo_dict[str(id)]
+    return redirect(url_for('todo'))
+
 @app.route('/new-todo/')
 def new_todo():
     return render_template('todo-form.html')
