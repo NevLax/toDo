@@ -8,12 +8,37 @@ body {
 }
 
 .wrapper {
-	max-weigth: 1240px;
+	max-width: 1240px;
 	margin: auto;
 	padding: 40px;
+	display: flex;
+	align-items: stretch;
+	flex-direction: column;
 }
 
 ul {
 	list-style-type: none;
-	padding: 0;
+	padding: 10px 30px 10px 30px;
+	border-left: 2px solid #666;
+	border-right: 2px solid #666;
+}
+
+li {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	border-bottom:1px solid #ccc;
+	padding: 20px;
+	min-width: 600px;
+}
+
+li:last-child {
+	border-bottom:0 solid #ccc;
+}
+
+a {
+	color: #8cf;
+	text-decoration: none;
+	background-color: transparent;
+	cursor: pointer;
 }

@@ -5,8 +5,12 @@
 	{% if td_dict %}
 	<ul>
 		{% for key, value in td_dict.items() %}
-		<li><a href="{{ url_for('get_todo', id=key)}}">{{ value['title'] }}</a></li>
+		<li>
+			<a href="{{ url_for('get_todo', id=key)}}">{{ value['title'] }}</a>
+			<button type="button">X</button>
+		</li>
 		{% endfor %}
 	</ul>
 	{% endif %}
+	<h1><a href="{{ url_for('new_todo') }}">New ToDo</a></h1>
 </div>
