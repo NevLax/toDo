@@ -2,8 +2,8 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
 <div class="wrapper">
 	{% if item %}
-	<h1>{{ item['title'] }}</h1>
-	<p>{{ item['description'] |safe }}</p>
+	<h1>{{ item[2] }}</h1>
+	<p>{{ item[3] |safe }}</p>
 	{% else %}
 	<h1>Not found ToDo</h1>
 	{% endif %}

@@ -2,12 +2,12 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
 <div class="wrapper">
 	<h1>Todo List</h1>
-	{% if td_dict %}
+	{% if data %}
 	<ul>
-		{% for key, value in td_dict.items() %}
+		{% for note in data %}
 		<li>
-			<a href="{{ url_for('get_todo', id=key) }}">{{ value['title'] }}</a>
-			<form action="{{ url_for('delete_todo', id=key) }}" method="post">
+			<a href="{{ url_for('get_todo', id=note[1]) }}">{{ note[2] }}</a>
+			<form action="{{ url_for('delete_todo', id=note[1]) }}" method="post">
 			    <button name="todo">x</button>
 			</form>
 		</li>
