@@ -64,7 +64,7 @@ def get_todo(id):
         return render_template('todo-item.html', item=item)
 
 
-@app.route('/todo/<uuid:id>/del', methods=['POST'])
+@app.route('/todo/<uuid:id>/del')
 def delete_todo(id):
     with sqlite3.connect('database.db') as notes:
         cursor = notes.cursor()

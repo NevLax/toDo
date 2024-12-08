@@ -4,10 +4,10 @@
 {% if item %}
 	<h1>{{ item[2] }}</h1>
 	{{ item[3] |safe }}
-	<a href="./edit" class="btn btn-outline-warning">Edit</a>
-	<form action="./del" method="post">
-		<button type="submit" class="btn btn-outline-danger">Delete</button>
-	</form>
+	<div class="">
+		<a href="./edit" class="btn btn-outline-warning">Edit</a>
+		<a href="./del" class="btn btn-outline-danger">Delete</a>
+	</div>
 {% else %}
 	<h1>Not found ToDo</h1>
 {% endif %}
