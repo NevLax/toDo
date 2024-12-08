@@ -38,9 +38,7 @@ def todo():
         return render_template('todo.html', data=data)
     else:                       #post for add new todo
         title = request.form.get('title')
-        print(request.form.get('title'))
-        print(request.form.get('description'))
-        description = markdown.markdown(request.form.get('description'))
+        description = request.form.get('description')
         uid = str(uuid.uuid1())
 
         with sqlite3.connect('database.db') as notes:
@@ -59,8 +57,11 @@ def get_todo(id):
         cursor = notes.cursor()
         cursor.execute('SELECT * FROM Notes WHERE uuid = ?', (str(id),))
         
-        data = cursor.fetchone() 
-        return render_template('todo-item.html', item=data)
+        data = cursor.fetchone()
+        id, uid, title, description = data
+        description = markdown.markdown(description)
+        item = (id, uid, title, description)
+        return render_template('todo-item.html', item=item)
 
 
 @app.route('/todo/<uuid:id>/del', methods=['POST'])
@@ -73,5 +74,28 @@ def delete_todo(id):
         return redirect(url_for('todo'))
 
 
+@app.route('/todo/<uuid:id>/edit', methods=['GET', 'POST'])
+def edit_todo(id):
+    if request.method == 'GET':
+        with sqlite3.connect('database.db') as notes:
+            cursor = notes.cursor()
+            cursor.execute('SELECT * FROM Notes WHERE uuid = ?', (str(id),))
+
+            data = cursor.fetchone()
+            _, _, title, description = data
+            return render_template('todo-edit.html', item=(title, description))
+    else:
+        with sqlite3.connect('database.db') as notes:
+            cursor = notes.cursor()
+            
+            title = request.form.get('title')
+            description = request.form.get('description')
+
+            cursor.execute('UPDATE Notes SET title = ?, description = ? WHERE uuid = ?',
+                (title, description, str(id),))
+
+        return redirect(url_for('get_todo', id=id))
+
+            
 if __name__ == '__main__':
     app.run()

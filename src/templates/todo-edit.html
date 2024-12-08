@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+
+	<form method="post">
+		<div class="mb-3">
+			<label for="tit" class="form-label">Title</label>
+			<input type="text" id="tit" value="{{ item[0] }}" name="title" class="form-control form-control-lg">
+		</div>
+		<div class="mb-3">
+			<label for="desc" class="form-label">Descripiton</label>
+			<textarea name="description" id="des" class="form-control">{{ item[1] }}</textarea>
+		</div>
+		<button type="submit" class="btn btn-success">Save</button>
+	</form>
+{% endblock %}
