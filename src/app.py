@@ -7,10 +7,7 @@ import sqlite3
 import markdown
 import uuid
 
-
 app = Flask(__name__)
-todo_dict = dict()
-
 
 connection = sqlite3.connect('database.db')
 connection.execute('''
@@ -38,10 +35,11 @@ def todo():
         cursor.execute('SELECT * FROM Notes')
 
         data = cursor.fetchall()
-        print(data)
         return render_template('todo.html', data=data)
     else:                       #post for add new todo
         title = request.form.get('title')
+        print(request.form.get('title'))
+        print(request.form.get('description'))
         description = markdown.markdown(request.form.get('description'))
         uid = str(uuid.uuid1())
 
@@ -75,6 +73,5 @@ def delete_todo(id):
         return redirect(url_for('todo'))
 
 
-@app.route('/new-todo/')
-def new_todo():
-    return render_template('todo-form.html')
+if __name__ == '__main__':
+    app.run()
