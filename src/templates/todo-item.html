@@ -4,9 +4,16 @@
 {% if item %}
 	<h1>{{ item[2] }}</h1>
 	{{ item[3] |safe }}
-	<div class="">
-		<a href="./edit" class="btn btn-outline-warning">Edit</a>
-		<a href="./del" class="btn btn-outline-danger">Delete</a>
+	<div class="d-flex">
+		<div class="btn-group ms-auto">
+			{% if item[4] %}
+				<a href="./done" class="btn btn-secondary">UnDone</a>
+			{% else %}
+				<a href="./done" class="btn btn-secondary">Done</a>
+			{% endif %}
+			<a href="./edit" class="btn btn-warning">Edit</a>
+			<a href="./del" class="btn btn-danger">Delete</a>
+		</div>
 	</div>
 {% else %}
 	<h1>Not found ToDo</h1>

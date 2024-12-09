@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS Notes (
 id INTEGER PRIMARY KEY,
 uuid TEXT NOT NULL,
 title TEXT NOT NULL,
-description TEXT
+description TEXT,
+done INTEGET NOT NULL
 )
 ''')
 connection.commit()
@@ -43,7 +44,7 @@ def todo():
 
         with sqlite3.connect('database.db') as notes:
             cursor = notes.cursor()
-            cursor.execute('INSERT INTO Notes (uuid, title, description) VALUES (?, ?, ?)',
+            cursor.execute('INSERT INTO Notes (uuid, title, description, done) VALUES (?, ?, ?, 0)',
                 (uid, title, description)
             )
             notes.commit()
@@ -58,9 +59,9 @@ def get_todo(id):
         cursor.execute('SELECT * FROM Notes WHERE uuid = ?', (str(id),))
         
         data = cursor.fetchone()
-        id, uid, title, description = data
+        id, uid, title, description, done = data
         description = markdown.markdown(description)
-        item = (id, uid, title, description)
+        item = (id, uid, title, description, done)
         return render_template('todo-item.html', item=item)
 
 
@@ -82,7 +83,7 @@ def edit_todo(id):
             cursor.execute('SELECT * FROM Notes WHERE uuid = ?', (str(id),))
 
             data = cursor.fetchone()
-            _, _, title, description = data
+            _, _, title, description, _ = data
             return render_template('todo-edit.html', item=(title, description))
     else:
         with sqlite3.connect('database.db') as notes:
@@ -95,6 +96,22 @@ def edit_todo(id):
                 (title, description, str(id),))
 
         return redirect(url_for('get_todo', id=id))
+
+
+@app.route('/todo/<uuid:id>/done')
+def done_todo(id):
+    with sqlite3.connect('database.db') as notes:
+        cursor = notes.cursor()
+        cursor.execute('SELECT * FROM Notes WHERE uuid = ?', (str(id),))
+    
+        _, _, _, _, done = cursor.fetchone()
+        if done:
+            done = 0
+        else:
+            done = 1
+
+        cursor.execute('UPDATE Notes SET done = ? WHERE uuid = ?', (done, str(id),))
+    return redirect(url_for('get_todo', id=id))
 
             
 if __name__ == '__main__':
