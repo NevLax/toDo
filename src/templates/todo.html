@@ -2,14 +2,21 @@
 
 {% block content %}
 	<div class="list-group my-3">
+		<div class="progress my-3" role="progressbar">
+			<div class="progress-bar progress-bar-striped progress-bar-animated" style="width: {{ count }}%"></div>
+		</div>
 	{% if data %}
 		{% for note in data %}
 			{% if note[4] %}
 				<a href="{{ url_for('get_todo', id=note[1]) }}"
-					class="list-group-item list-group-item-action text-decoration-line-through">{{ note[2] }}</a>
+					class="list-group-item list-group-item-action text-decoration-line-through">
+					<span class="badge text-bg-primary">{{ note[5] }}</span>  {{ note[2] }}
+				</a>
 			{% else %}
 				<a href="{{ url_for('get_todo', id=note[1]) }}"
-					class="list-group-item list-group-item-action">{{ note[2] }}</a>
+					class="list-group-item list-group-item-action">
+					<span class="badge text-bg-primary">{{ note[5] }}</span>  {{ note[2] }}
+				</a>
 			{% endif %}
 		{% endfor %}
 	{% endif %}

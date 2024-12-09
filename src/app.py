@@ -16,7 +16,8 @@ id INTEGER PRIMARY KEY,
 uuid TEXT NOT NULL,
 title TEXT NOT NULL,
 description TEXT,
-done INTEGET NOT NULL
+done INTEGET NOT NULL,
+count INTEGER NOT NULL
 )
 ''')
 connection.commit()
@@ -36,7 +37,14 @@ def todo():
         cursor.execute('SELECT * FROM Notes')
 
         data = cursor.fetchall()
-        return render_template('todo.html', data=data)
+        
+        all_c = get_all_count()
+        done_c = get_done_count()
+        count = 0
+        if (all_c):
+            count = int(done_c / (all_c / 100))
+        
+        return render_template('todo.html', data=data, count=count)
     else:                       #post for add new todo
         title = request.form.get('title')
         description = request.form.get('description')
@@ -44,7 +52,7 @@ def todo():
 
         with sqlite3.connect('database.db') as notes:
             cursor = notes.cursor()
-            cursor.execute('INSERT INTO Notes (uuid, title, description, done) VALUES (?, ?, ?, 0)',
+            cursor.execute('INSERT INTO Notes (uuid, title, description, done, count) VALUES (?, ?, ?, 0, 0)',
                 (uid, title, description)
             )
             notes.commit()
@@ -59,7 +67,7 @@ def get_todo(id):
         cursor.execute('SELECT * FROM Notes WHERE uuid = ?', (str(id),))
         
         data = cursor.fetchone()
-        id, uid, title, description, done = data
+        id, uid, title, description, done, count = data
         description = markdown.markdown(description)
         item = (id, uid, title, description, done)
         return render_template('todo-item.html', item=item)
@@ -83,17 +91,18 @@ def edit_todo(id):
             cursor.execute('SELECT * FROM Notes WHERE uuid = ?', (str(id),))
 
             data = cursor.fetchone()
-            _, _, title, description, _ = data
-            return render_template('todo-edit.html', item=(title, description))
+            _, _, title, description, _, count = data
+            return render_template('todo-edit.html', item=(title, description, count))
     else:
         with sqlite3.connect('database.db') as notes:
             cursor = notes.cursor()
             
             title = request.form.get('title')
             description = request.form.get('description')
+            count = request.form.get('count')
 
-            cursor.execute('UPDATE Notes SET title = ?, description = ? WHERE uuid = ?',
-                (title, description, str(id),))
+            cursor.execute('UPDATE Notes SET title = ?, description = ?, count = ? WHERE uuid = ?',
+                (title, description, count, str(id),))
 
         return redirect(url_for('get_todo', id=id))
 
@@ -104,7 +113,7 @@ def done_todo(id):
         cursor = notes.cursor()
         cursor.execute('SELECT * FROM Notes WHERE uuid = ?', (str(id),))
     
-        _, _, _, _, done = cursor.fetchone()
+        _, _, _, _, done, _  = cursor.fetchone()
         if done:
             done = 0
         else:
@@ -112,6 +121,34 @@ def done_todo(id):
 
         cursor.execute('UPDATE Notes SET done = ? WHERE uuid = ?', (done, str(id),))
     return redirect(url_for('get_todo', id=id))
+
+
+def get_all_count():
+    with sqlite3.connect('database.db') as notes:
+        cursor = notes.cursor()
+        cursor.execute('SELECT * FROM Notes')
+    
+        data = cursor.fetchall()
+
+        sum = 0
+        for todo in data:        
+            _, _, _, _, _, count = todo
+            sum += count
+        return sum
+
+
+def get_done_count():
+    with sqlite3.connect('database.db') as notes:
+        cursor = notes.cursor()
+        cursor.execute('SELECT * FROM Notes WHERE done = 1')
+    
+        data = cursor.fetchall()
+
+        sum = 0
+        for todo in data:        
+            _, _, _, _, _, count = todo
+            sum += count
+        return sum
 
             
 if __name__ == '__main__':

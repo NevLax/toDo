@@ -10,6 +10,10 @@
 			<label for="desc" class="form-label">Descripiton</label>
 			<textarea name="description" id="des" class="form-control" style="height: 200px">{{ item[1] }}</textarea>
 		</div>
+		<div class="mb-3">
+			<label for="cnt" class="form-label">Count balls</label>
+			<input type="number" min="0" id="cnt" value="{{ item[2] }}" name="count" class="form-control form-control-lg">
+		</div>
 		<button type="submit" class="btn btn-success ms-auto">Save</button>
 	</form>
 {% endblock %}
